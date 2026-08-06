@@ -71,8 +71,8 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **OpenS
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/MEDAI.git
-cd MEDAI
+git clone https://github.com/JaswanthMatsa/MediAI.git
+cd MediAI
 ```
 
 ### 2. Backend Setup
