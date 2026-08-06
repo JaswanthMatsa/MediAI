@@ -4,8 +4,6 @@ MediAI is a full-stack healthcare web application that helps users find nearby m
 
 Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, **US OpenFDA API**, and **Google Gemini AI**.
 
-**Live demo:** _add your deployed link here_
-
 ---
 
 ## Key Features
@@ -93,8 +91,10 @@ CLIENT_URL=http://localhost:5173
 ```
 
 ```bash
-npm run dev
+npm start
 ```
+*(or `npm run dev` for auto-restart on file changes — requires Node 18.11+)*
+
 Runs at `http://localhost:5001`
 
 **Frontend**
