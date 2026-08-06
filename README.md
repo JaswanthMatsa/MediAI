@@ -1,146 +1,156 @@
-# 🩺 MediAI — Next-Gen Smart Healthcare & GIS Discovery Platform
+# MediAI — Smart Healthcare & GIS Discovery Platform
 
-**MediAI** is a full-stack AI-driven healthcare web application designed to connect users with nearby medical facilities, authentic FDA drug safety information, medication/hydration tracking, and structured symptom analysis backed by clinical guardrails.
+MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up authentic FDA drug information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
 
-Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **OpenStreetMap (Overpass GIS)**, **US OpenFDA API**, and **Google Gemini AI**.
+Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, **US OpenFDA API**, and **Google Gemini AI**.
 
----
-
-## 🌟 Key Features
-
-### 📍 Real-Time GIS Hospital & Clinic Finder
-- **Interactive OpenStreetMap (Leaflet)**: Live map interface displaying nearby hospitals, emergency rooms, outpatient clinics, and 24/7 pharmacies.
-- **Proximity & Radius Search**: Calculates exact distance (in km and miles) using the Haversine formula. Filter facilities within 3km, 5km, 10km, or 20km.
-- **One-Tap Route Navigation**: Direct link to Google Maps driving/walking directions based on live GPS coordinates.
-
-### 💊 Authentic US OpenFDA Drug Search
-- **Official FDA Labels**: Queries the US Food & Drug Administration API for brand names, active ingredients, dosage rules, and black-box warnings.
-- **Category Quick Filters**: Pain & Fever (Paracetamol/Ibuprofen), Cough & Cold, Allergies, Antacids, and Oral Rehydration.
-- **Save Favorite Remedies**: Bookmark essential OTC medicines to your personal profile.
-
-### 🤖 AI Symptom Checker & Clinical Safety Guardrails
-- **Powered by Google Gemini AI**: Natural language symptom analysis returning probable causes, home care steps, and recommended OTC remedies.
-- **Strict Medical Guardrails Engine**: Non-diagnostic design that never prescribes controlled antibiotics or definitive diagnoses.
-- **Automatic Emergency Detection**: Detects acute keywords (chest pain, stroke, severe bleeding) and immediately elevates urgency badges to 🔴 Emergency while presenting the nearest trauma facilities.
-
-### ⏰ Daily Medication & Hydration Tracker
-- **Custom Reminders**: Set daily medicine intake times with dosage instructions and mark tasks as completed.
-- **Interactive Water Tracker**: Visual progress bar tracking 8-glass daily hydration goals with local storage persistence.
-
-### 📊 Body Mass Index (BMI) & Health Assessment
-- Calculates exact BMI ratio, classifies weight categories (Underweight, Normal, Overweight, Obesity), and generates evidence-based wellness recommendations.
-
-### 🚨 Emergency Hub & Direct Direct Hotline
-- One-tap emergency phone dialing for Universal Emergency (911/112), Ambulance, Poison Control, and Mental Health Crisis Hotlines.
-- Visual red-flag symptom guide for acute medical situations.
+**Live demo:** _add your deployed link here_
 
 ---
 
-## 🏗️ Architecture & Data Flow
+## Key Features
+
+**Real-Time GIS Hospital & Clinic Finder**
+Interactive map (Leaflet + OpenStreetMap) showing nearby hospitals, clinics, and pharmacies, with Haversine-based distance filtering (3–20 km) and one-tap directions via Google Maps.
+
+**US OpenFDA Drug Search**
+Queries the official FDA label database for brand names, active ingredients, dosage, and warnings, with quick category filters and the ability to save favorite OTC remedies.
+
+**AI Symptom Checker with Clinical Guardrails**
+Google Gemini-powered symptom analysis (with a rule-based fallback when no API key is configured) that returns structured, non-diagnostic guidance — possible cause, OTC options, home care, and when to see a doctor. Never prescribes controlled substances or definitive diagnoses. Automatically detects emergency keywords and surfaces the nearest trauma facilities.
+
+**Medication & Hydration Tracking**
+Custom daily medicine reminders with dosage notes, plus a hydration tracker with progress visualization.
+
+**BMI & Health Assessment**
+Calculates BMI, classifies weight category, and returns evidence-based wellness recommendations.
+
+**Emergency Hub**
+One-tap dialing for emergency services, ambulance, poison control, and mental health crisis lines, plus a red-flag symptom reference guide.
+
+---
+
+## Architecture
 
 ```
-[ Frontend (React 18 + Vite + Leaflet + Tailwind CSS) ]
-                        │
-                        │ REST API Requests
-                        ▼
-      [ Backend (Node.js + Express Server) ]
-       ├── Auth Engine (JWT + MongoDB / In-Memory Fallback)
-       ├── OpenStreetMap Service (Nominatim + Overpass QL)
-       ├── OpenFDA Drug Service (FDA Label Query + Local OTC Cache)
-       └── Gemini AI Service (Clinical Safety Engine)
+Frontend (React + Vite + Leaflet + Tailwind)
+                │  REST API
+                ▼
+Backend (Node.js + Express)
+ ├── Auth (JWT + MongoDB, in-memory fallback for local dev)
+ ├── Hospital Service (Nominatim + Overpass QL)
+ ├── Medicine Service (OpenFDA + local OTC cache)
+ └── AI Service (Gemini, with rule-based fallback)
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-| Layer | Technologies Used |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, Tailwind CSS, Lucide React Icons, Leaflet Maps, React Router v7 |
-| **Backend** | Node.js, Express.js, JWT Authentication, Axios, Mongoose |
-| **Database** | MongoDB Atlas (with in-memory fallback for local execution) |
-| **APIs Integrated** | OpenStreetMap Overpass API, Nominatim Geocoding, US OpenFDA API, Google Gemini AI |
+| Layer | Technologies |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS, React Router v7, Leaflet |
+| Backend | Node.js, Express, JWT, Axios, Mongoose |
+| Database | MongoDB Atlas (in-memory fallback for local runs without a DB) |
+| External APIs | OpenStreetMap (Overpass, Nominatim), US OpenFDA, Google Gemini |
 
 ---
 
-## 🚀 Quick Start Guide
+## Security
 
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm or yarn
+- JWT authentication with an environment-enforced secret — the server fails to start if `JWT_SECRET` is not set, rather than falling back to a default
+- Ownership checks on all user-scoped resources to prevent unauthorized access to another user's data
+- Rate limiting on authentication endpoints to reduce brute-force risk
+- HTTP security headers via Helmet; CORS restricted to a configured client origin
+- Fallback location data is explicitly flagged as unverified sample data and never presented as a real facility's contact information
 
-### 1. Clone the Repository
+**Medical Disclaimer:** MediAI is an informational tool only. It does not provide medical diagnosis or prescribe controlled substances. In a medical emergency, call your local emergency number immediately.
+
+---
+
+## Getting Started
+
+**Prerequisites:** Node.js v18+, npm
+
 ```bash
 git clone https://github.com/JaswanthMatsa/MediAI.git
 cd MediAI
 ```
 
-### 2. Backend Setup
+**Backend**
 ```bash
 cd backend
 npm install
 ```
 
-Create or verify `.env` file in `/backend`:
+Create `backend/.env`:
 ```env
 PORT=5001
 MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=your_random_secret_key
 GEMINI_API_KEY=your_gemini_api_key
 CLIENT_URL=http://localhost:5173
 ```
 
-Start backend dev server:
 ```bash
 npm run dev
 ```
-*Backend runs at: `http://localhost:5001`*
+Runs at `http://localhost:5001`
 
-### 3. Frontend Setup
+**Frontend**
 ```bash
 cd ../frontend
 npm install
 npm run dev
 ```
-*Frontend runs at: `http://localhost:5173`*
+Runs at `http://localhost:5173`
 
 ---
 
-## 📄 API Endpoints
+## API Endpoints
 
-### 🔐 Authentication (`/api/auth`)
-- `POST /api/auth/register` — Register a new user
-- `POST /api/auth/login` — User login & JWT issuance
-- `GET /api/auth/me` — Fetch active profile
-- `PUT /api/auth/profile` — Update medical history & preferences
+**Auth** (`/api/auth`)
+| Method | Route | Auth | Description |
+|---|---|:---:|---|
+| POST | `/register` | – | Register a new user |
+| POST | `/login` | – | Log in and receive a JWT |
+| GET | `/me` | 🔒 | Get current user profile |
+| PUT | `/profile` | 🔒 | Update profile / medical history |
 
-### 💬 AI Chat & Symptoms (`/api/chat`)
-- `POST /api/chat/message` — Analyze symptoms & return OTC/hospital guidance
-- `GET /api/chat/history` — Get past conversation logs
-- `DELETE /api/chat/history` — Clear chat history
+**Chat / Symptoms** (`/api/chat`)
+| Method | Route | Auth | Description |
+|---|---|:---:|---|
+| POST | `/message` | optional | Analyze symptoms, return OTC/hospital guidance |
+| GET | `/history` | optional | Get past chat history |
+| DELETE | `/history` | 🔒 | Clear chat history |
 
-### 🏥 Facilities (`/api/hospitals`)
-- `GET /api/hospitals/nearby?lat=...&lng=...&radius=...&type=...` — Fetch OSM nearby care
-- `POST /api/hospitals/save` — Save hospital to favorites
-- `GET /api/hospitals/saved` — Get bookmarked facilities
+**Hospitals** (`/api/hospitals`)
+| Method | Route | Auth | Description |
+|---|---|:---:|---|
+| GET | `/nearby` | optional | Find nearby facilities |
+| POST | `/save` | 🔒 | Save a facility to favorites |
+| GET | `/saved` | 🔒 | List saved facilities |
+| DELETE | `/saved/:hospitalId` | 🔒 | Remove a saved facility |
 
-### 💊 Medicines (`/api/medicines`)
-- `GET /api/medicines/search?q=...` — Query OpenFDA drug database
-- `POST /api/medicines/save` — Save OTC medicine to favorites
+**Medicines** (`/api/medicines`)
+| Method | Route | Auth | Description |
+|---|---|:---:|---|
+| GET | `/search` | optional | Search the OpenFDA drug database |
+| POST | `/save` | 🔒 | Save a medicine to favorites |
 
-### 🩺 Health Metrics & Reminders (`/api/health`)
-- `GET /api/health/reminders` — Fetch daily medication reminders
-- `POST /api/health/reminders` — Create new reminder
-- `PUT /api/health/reminders/:id/toggle` — Toggle completed status
-- `POST /api/health/bmi` — Calculate BMI and wellness advice
+**Health** (`/api/health`)
+| Method | Route | Auth | Description |
+|---|---|:---:|---|
+| GET | `/reminders` | 🔒 | List medication reminders |
+| POST | `/reminders` | 🔒 | Create a reminder |
+| PUT | `/reminders/:id/toggle` | 🔒 | Toggle reminder completion |
+| POST | `/bmi` | – | Calculate BMI |
+| GET | `/info` | – | Get emergency contacts & articles |
+
+🔒 = requires a valid JWT
 
 ---
 
-## 🔒 Security & Medical Disclaimer
+## Author
 
-> **Medical Disclaimer**: MediAI is designed as an informational health platform. It does NOT provide formal medical diagnosis or prescribe controlled substances. In case of medical emergency, immediately dial **911** or visit the nearest trauma center.
-
----
-
-## 🤝 Portfolio & CV Credit
-Developed by **Jaswanth Matsa** — Healthcare AI & Web Development Project.
+**Jaswanth Matsa**
