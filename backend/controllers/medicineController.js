@@ -50,6 +50,9 @@ const getMedicinesBySymptom = async (req, res, next) => {
   }
 };
 
+// In-memory fallback for saved medicines
+const inMemorySavedMedicines = [];
+
 // @desc Save Medicine to Favourites
 // @route POST /api/medicines/save
 const saveMedicine = async (req, res, next) => {
@@ -68,10 +71,15 @@ const saveMedicine = async (req, res, next) => {
       }
       return res.json({ success: true, message: 'Medicine saved to favorites', savedMedicines: user.savedMedicines });
     } else {
+      const existing = inMemorySavedMedicines.find(m => m.userId === userId && m.name === name);
+      if (!existing) {
+        inMemorySavedMedicines.push({ userId, name, brandName, uses });
+      }
+      const userList = inMemorySavedMedicines.filter(m => m.userId === userId);
       return res.json({
         success: true,
         message: 'Medicine saved to favorites (In-Memory)',
-        savedMedicines: [{ name, brandName, uses }]
+        savedMedicines: userList
       });
     }
   } catch (error) {

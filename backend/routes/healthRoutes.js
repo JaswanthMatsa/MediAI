@@ -4,9 +4,9 @@ const { optionalAuth, protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.get('/reminders', optionalAuth, getReminders);
-router.post('/reminders', optionalAuth, createReminder);
-router.put('/reminders/:id/toggle', optionalAuth, toggleReminder);
+router.get('/reminders', protect, getReminders);
+router.post('/reminders', protect, createReminder);
+router.put('/reminders/:id/toggle', protect, toggleReminder);
 router.post('/bmi', calculateBMI);
 router.get('/info', getHealthInfo);
 

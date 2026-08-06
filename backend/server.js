@@ -1,9 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const dotenv = require('dotenv');
 const path = require('path');
 
 dotenv.config();
+
+const { getJwtSecret } = require('./utils/generateToken');
+// Fail fast on startup if JWT_SECRET environment variable is missing
+getJwtSecret();
 
 const { connectDB } = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
@@ -19,9 +24,11 @@ const app = express();
 // Connect Database
 connectDB();
 
-// Middleware
+// Security & Middleware
+app.use(helmet());
+const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: true,
+  origin: allowedOrigin,
   credentials: true
 }));
 app.use(express.json());

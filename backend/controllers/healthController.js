@@ -62,19 +62,33 @@ const createReminder = async (req, res, next) => {
 const toggleReminder = async (req, res, next) => {
   try {
     const reminderId = req.params.id;
+    const userId = req.user ? req.user.id : null;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Not authorized' });
+    }
 
     if (getIsConnected()) {
       const reminder = await Reminder.findById(reminderId);
       if (!reminder) return res.status(404).json({ success: false, message: 'Reminder not found' });
+
+      // Ownership check to prevent IDOR
+      if (reminder.user.toString() !== userId.toString()) {
+        return res.status(403).json({ success: false, message: 'Not authorized to modify this reminder' });
+      }
 
       reminder.completedToday = !reminder.completedToday;
       await reminder.save();
       return res.json({ success: true, reminder });
     } else {
       const reminder = inMemoryReminders.find(r => r.id === reminderId || r._id === reminderId);
-      if (reminder) {
-        reminder.completedToday = !reminder.completedToday;
+      if (!reminder) return res.status(404).json({ success: false, message: 'Reminder not found' });
+
+      if (reminder.user && reminder.user.toString() !== userId.toString()) {
+        return res.status(403).json({ success: false, message: 'Not authorized to modify this reminder' });
       }
+
+      reminder.completedToday = !reminder.completedToday;
       return res.json({ success: true, reminder });
     }
   } catch (error) {

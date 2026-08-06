@@ -1,15 +1,11 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { getIsConnected } = require('../config/db');
+const { generateToken } = require('../utils/generateToken');
 
 // In-memory fallback user store when MongoDB is disconnected
 const inMemoryUsers = new Map();
 
-function generateToken(userId, email, name) {
-  const secret = process.env.JWT_SECRET || 'mediai_super_secret_jwt_key_2026_healthcare_app';
-  return jwt.sign({ id: userId, email, name }, secret, { expiresIn: '7d' });
-}
 
 // @desc Register User
 // @route POST /api/auth/register

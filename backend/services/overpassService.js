@@ -14,17 +14,17 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return Math.round(distanceKm * 10) / 10; // Round to 1 decimal place
 }
 
-// Regional fallback if network timeouts occur
+// Regional sample fallback if network timeouts occur
 function getFallbackHospitals(lat, lng) {
   const userLat = parseFloat(lat) || 31.224;
   const userLng = parseFloat(lng) || 75.771;
 
   const offsets = [
-    { name: 'Civil Hospital Phagwara', type: 'hospital', latOff: 0.008, lngOff: 0.006, phone: '+91 1824 260 210', rating: 4.6, emergency: true, timings: '24/7 Emergency Room' },
-    { name: 'Johal Multispeciality Hospital', type: 'hospital', latOff: -0.012, lngOff: 0.009, phone: '+91 181 247 1100', rating: 4.8, emergency: true, timings: '24/7 Emergency & ICU' },
-    { name: 'Apollo Pharmacy & Wellness', type: 'pharmacy', latOff: -0.004, lngOff: -0.005, phone: '+91 1800 200 1234', rating: 4.9, emergency: false, timings: '24 Hours Open' },
-    { name: 'Global Care Clinic & Trauma Center', type: 'clinic', latOff: 0.006, lngOff: -0.011, phone: '+91 1824 250 888', rating: 4.5, emergency: false, timings: '8:00 AM - 10:00 PM' },
-    { name: 'Sacred Heart Emergency Hospital', type: 'emergency', latOff: 0.015, lngOff: -0.018, phone: '+91 181 224 4500', rating: 4.7, emergency: true, timings: '24/7 Critical Care' }
+    { name: '[Sample Data] Regional General Hospital', type: 'hospital', latOff: 0.008, lngOff: 0.006, emergency: true, timings: '24/7 Emergency' },
+    { name: '[Sample Data] City Multispeciality Center', type: 'hospital', latOff: -0.012, lngOff: 0.009, emergency: true, timings: '24/7 Emergency & ICU' },
+    { name: '[Sample Data] Local Pharmacy & Wellness', type: 'pharmacy', latOff: -0.004, lngOff: -0.005, emergency: false, timings: 'Standard Hours' },
+    { name: '[Sample Data] Community Care Clinic', type: 'clinic', latOff: 0.006, lngOff: -0.011, emergency: false, timings: '8:00 AM - 8:00 PM' },
+    { name: '[Sample Data] Emergency Trauma Unit', type: 'emergency', latOff: 0.015, lngOff: -0.018, emergency: true, timings: '24/7 Critical Care' }
   ];
 
   return offsets.map((item, idx) => {
@@ -32,17 +32,19 @@ function getFallbackHospitals(lat, lng) {
     const hLng = userLng + item.lngOff;
     const dist = calculateDistance(userLat, userLng, hLat, hLng);
     return {
-      osmId: `real_loc_${idx + 1}`,
+      osmId: `sample_loc_${idx + 1}`,
       name: item.name,
-      address: `Near Main Highway, Medical District`,
+      address: `Unverified Sample Location - Search maps app for direct details`,
       coordinates: { latitude: hLat, longitude: hLng },
       type: item.type,
-      phone: item.phone,
-      rating: item.rating,
+      phone: 'N/A - Direct contact unavailable (Use Google Maps / 112)',
+      rating: null,
       timings: item.timings,
       emergencyServices: item.emergency,
       distanceKm: dist,
-      distanceMiles: Math.round(dist * 0.621371 * 10) / 10
+      distanceMiles: Math.round(dist * 0.621371 * 10) / 10,
+      isUnverifiedSample: true,
+      unverifiedNotice: 'Live OSM lookup unavailable. Please search directly via Google Maps or your local maps app for actual facility phone numbers.'
     };
   }).sort((a, b) => a.distanceKm - b.distanceKm);
 }
@@ -76,16 +78,17 @@ async function fetchNearbyHospitalsFromOSM(lat, lng, radiusMeters = 10000) {
 
         return {
           osmId: `nom_${item.place_id || idx}`,
-          name: item.name || item.display_name.split(',')[0] || 'Regional Medical Hospital',
+          name: item.name || item.display_name.split(',')[0] || 'Medical Facility',
           address: item.display_name || `${addr.road || ''}, ${addr.city || addr.town || addr.county || ''}`,
           coordinates: { latitude: itemLat, longitude: itemLng },
           type: type,
-          phone: '+91 (180) 020-0123',
-          rating: (4.4 + (idx % 5) * 0.1).toFixed(1),
+          phone: addr.phone || 'N/A - Direct contact unavailable',
+          rating: null,
           timings: 'Open 24 Hours',
           emergencyServices: true,
           distanceKm: dist,
-          distanceMiles: Math.round(dist * 0.621371 * 10) / 10
+          distanceMiles: Math.round(dist * 0.621371 * 10) / 10,
+          isUnverifiedSample: false
         };
       }).filter(h => h.distanceKm <= 35);
 
@@ -137,12 +140,13 @@ async function fetchNearbyHospitalsFromOSM(lat, lng, radiusMeters = 10000) {
             : `${dist} km from current location`,
           coordinates: { latitude: itemLat, longitude: itemLng },
           type: type,
-          phone: tags.phone || tags['contact:phone'] || '+91 1800 200 1234',
-          rating: 4.7,
+          phone: tags.phone || tags['contact:phone'] || 'N/A - Direct contact unavailable',
+          rating: null,
           timings: tags.opening_hours || '24/7 Open',
           emergencyServices: tags.emergency === 'yes' || type === 'hospital',
           distanceKm: dist,
-          distanceMiles: Math.round(dist * 0.621371 * 10) / 10
+          distanceMiles: Math.round(dist * 0.621371 * 10) / 10,
+          isUnverifiedSample: false
         };
       }).filter(h => h.coordinates.latitude && h.coordinates.longitude);
 
@@ -158,3 +162,4 @@ async function fetchNearbyHospitalsFromOSM(lat, lng, radiusMeters = 10000) {
 }
 
 module.exports = { fetchNearbyHospitalsFromOSM, calculateDistance, getFallbackHospitals };
+

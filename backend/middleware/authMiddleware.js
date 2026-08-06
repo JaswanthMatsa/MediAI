@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { getJwtSecret } = require('../utils/generateToken');
 
 const protect = (req, res, next) => {
   let token;
@@ -11,7 +12,7 @@ const protect = (req, res, next) => {
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'mediai_super_secret_jwt_key_2026_healthcare_app';
+    const secret = getJwtSecret();
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
@@ -27,7 +28,7 @@ const optionalAuth = (req, res, next) => {
   }
   if (token) {
     try {
-      const secret = process.env.JWT_SECRET || 'mediai_super_secret_jwt_key_2026_healthcare_app';
+      const secret = getJwtSecret();
       req.user = jwt.verify(token, secret);
     } catch (err) {
       req.user = null;
@@ -37,3 +38,4 @@ const optionalAuth = (req, res, next) => {
 };
 
 module.exports = { protect, optionalAuth };
+
