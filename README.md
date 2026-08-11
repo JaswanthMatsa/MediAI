@@ -1,10 +1,10 @@
 # MediAI — Smart Healthcare & GIS Discovery Platform
 
-MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up medicine information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
+MediAI is a full-stack AI healthcare platform that helps users find nearby medical facilities, search a built-in medicine database, track medication and hydration, and receive AI-guided symptom information.
 
 Medicine search uses a built-in medicine catalog, while AI symptom analysis uses Gemini with medicine information from the local catalog.
 
-Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, and **Google Gemini AI**. Deployed seamlessly on **Vercel** (Frontend) and **Render** (Backend).
+Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, and **Google Gemini AI**. Deployed on **Vercel** (Frontend) and **Render** (Backend).
 
 ---
 
@@ -75,7 +75,7 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **Mongo
 - JWT-based authentication for protected routes
 - User ownership checks for user-specific data
 - Environment variables for sensitive configuration
-- Medical disclaimer to clarify that the application provides informational guidance only
+- Medical disclaimer for responsible AI-assisted healthcare guidance
 
 **Medical Disclaimer:** MediAI is an informational tool only. It does not provide medical diagnosis or prescribe controlled substances. In a medical emergency, call your local emergency number immediately.
 
