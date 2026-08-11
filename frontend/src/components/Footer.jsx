@@ -27,7 +27,7 @@ export default function Footer() {
               <span className="text-lg font-extrabold text-slate-900 tracking-tight">Medi<span className="text-teal-700">AI</span></span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Empowering individuals with instant location-aware hospital discovery, FDA drug database, and structured symptom guidance.
+              Empowering individuals with instant location-aware hospital discovery, OTC medicine database, and structured symptom guidance.
             </p>
           </div>
 
@@ -37,7 +37,7 @@ export default function Footer() {
             <ul className="space-y-2 text-xs text-slate-600">
               <li><Link to="/hospitals" className="hover:text-teal-700 transition">Find Nearby Hospitals</Link></li>
               <li><Link to="/symptom-checker" className="hover:text-teal-700 transition">Symptom Checker</Link></li>
-              <li><Link to="/medicines" className="hover:text-teal-700 transition">OpenFDA Medicines</Link></li>
+              <li><Link to="/medicines" className="hover:text-teal-700 transition">OTC Medicine Database</Link></li>
               <li><Link to="/articles" className="hover:text-teal-700 transition">Health Articles</Link></li>
               <li><Link to="/reminders" className="hover:text-teal-700 transition">Medication Reminders</Link></li>
             </ul>
@@ -48,7 +48,7 @@ export default function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">Authentic Data APIs</h4>
             <ul className="space-y-2 text-xs text-slate-600">
               <li className="flex items-center gap-1">
-                <span>US FDA Drug Database</span>
+                <span>OTC Medicine Catalog</span>
                 <ExternalLink className="w-3 h-3 text-slate-400" />
               </li>
               <li className="flex items-center gap-1">

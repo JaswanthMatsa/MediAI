@@ -1,6 +1,4 @@
-const axios = require('axios');
-
-const FALLBACK_MEDICINES = [
+const OTC_MEDICINES = [
   {
     name: 'Acetaminophen / Paracetamol',
     brandName: 'Tylenol / Calpol',
@@ -9,7 +7,7 @@ const FALLBACK_MEDICINES = [
     warnings: 'Liver warning: Extreme liver damage may occur if you take more than 4,000 mg in 24 hours or consume 3+ alcoholic drinks daily.',
     sideEffects: 'Nausea, allergic skin reaction, rash (rare).',
     ingredients: ['Acetaminophen'],
-    manufacturer: 'McNeil Consumer Healthcare / FDA Approved OTC',
+    manufacturer: 'McNeil Consumer Healthcare',
     isOTC: true
   },
   {
@@ -20,7 +18,7 @@ const FALLBACK_MEDICINES = [
     warnings: 'Stomach bleeding hazard: May increase risk of severe stomach bleeding if taken for prolonged periods or with stomach ulcer history.',
     sideEffects: 'Stomach upset, heartburn, mild nausea, dizziness.',
     ingredients: ['Ibuprofen'],
-    manufacturer: 'Pfizer Consumer Healthcare / FDA Approved OTC',
+    manufacturer: 'Pfizer Consumer Healthcare',
     isOTC: true
   },
   {
@@ -69,47 +67,21 @@ const FALLBACK_MEDICINES = [
   }
 ];
 
-async function searchOpenFDA(query) {
+async function searchMedicines(query) {
   if (!query || query.trim() === '') {
-    return FALLBACK_MEDICINES;
+    return OTC_MEDICINES;
   }
 
   const cleanQuery = query.trim().toLowerCase();
 
-  try {
-    const url = `https://api.fda.gov/drug/label.json?search=(openfda.brand_name:"${cleanQuery}"+openfda.generic_name:"${cleanQuery}"+purpose:"${cleanQuery}")&limit=6`;
-    const response = await axios.get(url, { timeout: 4000 });
-
-    if (response.data?.results?.length > 0) {
-      return response.data.results.map((item, idx) => {
-        const openfda = item.openfda || {};
-        return {
-          fdaId: item.id || `fda_${idx}`,
-          name: openfda.generic_name?.[0] || openfda.brand_name?.[0] || query,
-          brandName: openfda.brand_name?.[0] || openfda.substance_name?.[0] || 'Generic FDA OTC',
-          uses: item.purpose?.[0] || item.indications_and_usage?.[0] || 'Relief of mild healthcare symptoms.',
-          dosage: item.dosage_and_administration?.[0]?.substring(0, 300) || 'Check packaging label for exact dosage details.',
-          warnings: item.warnings?.[0]?.substring(0, 300) || item.do_not_use?.[0]?.substring(0, 300) || 'Consult a healthcare professional prior to use.',
-          sideEffects: item.stop_use?.[0]?.substring(0, 200) || 'Mild digestive discomfort or drowsiness may occur.',
-          ingredients: openfda.substance_name || [openfda.generic_name?.[0] || 'Active OTC ingredient'],
-          manufacturer: openfda.manufacturer_name?.[0] || 'FDA Registered Manufacturer',
-          isOTC: true
-        };
-      });
-    }
-  } catch (err) {
-    console.warn(`[OpenFDA Search Warning] FDA API query '${cleanQuery}' fallback used: ${err.message}`);
-  }
-
-  // Filter fallback list by query term match
-  const filtered = FALLBACK_MEDICINES.filter(m =>
+  const filtered = OTC_MEDICINES.filter(m =>
     m.name.toLowerCase().includes(cleanQuery) ||
     m.brandName.toLowerCase().includes(cleanQuery) ||
     m.uses.toLowerCase().includes(cleanQuery) ||
     m.ingredients.some(i => i.toLowerCase().includes(cleanQuery))
   );
 
-  return filtered.length > 0 ? filtered : FALLBACK_MEDICINES;
+  return filtered.length > 0 ? filtered : OTC_MEDICINES;
 }
 
-module.exports = { searchOpenFDA, FALLBACK_MEDICINES };
+module.exports = { searchMedicines, OTC_MEDICINES };

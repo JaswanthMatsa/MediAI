@@ -1,8 +1,8 @@
 # MediAI — Smart Healthcare & GIS Discovery Platform
 
-MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up authentic FDA drug information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
+MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up OTC drug information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
 
-Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, **US OpenFDA API**, and **Google Gemini AI**.
+Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, and **Google Gemini AI**.
 
 ---
 
@@ -11,8 +11,8 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **Mongo
 **Real-Time GIS Hospital & Clinic Finder**
 Interactive map (Leaflet + OpenStreetMap) showing nearby hospitals, clinics, and pharmacies, with Haversine-based distance filtering (3–20 km) and one-tap directions via Google Maps.
 
-**US OpenFDA Drug Search**
-Queries the official FDA label database for brand names, active ingredients, dosage, and warnings, with quick category filters and the ability to save favorite OTC remedies.
+**OTC Drug Search**
+Search common OTC medicine records for brand names, active ingredients, dosage, and warnings, with quick category filters and the ability to save favorite remedies.
 
 **AI Symptom Checker with Clinical Guardrails**
 Google Gemini-powered symptom analysis (with a rule-based fallback when no API key is configured) that returns structured, non-diagnostic guidance — possible cause, OTC options, home care, and when to see a doctor. Never prescribes controlled substances or definitive diagnoses. Automatically detects emergency keywords and surfaces the nearest trauma facilities.
@@ -37,7 +37,7 @@ Frontend (React + Vite + Leaflet + Tailwind)
 Backend (Node.js + Express)
  ├── Auth (JWT + MongoDB, in-memory fallback for local dev)
  ├── Hospital Service (Nominatim + Overpass QL)
- ├── Medicine Service (OpenFDA + local OTC cache)
+ ├── Medicine Service (Built-in OTC medicine catalog)
  └── AI Service (Gemini, with rule-based fallback)
 ```
 
@@ -50,7 +50,7 @@ Backend (Node.js + Express)
 | Frontend | React 18, Vite, Tailwind CSS, React Router v7, Leaflet |
 | Backend | Node.js, Express, JWT, Axios, Mongoose |
 | Database | MongoDB Atlas (in-memory fallback for local runs without a DB) |
-| External APIs | OpenStreetMap (Overpass, Nominatim), US OpenFDA, Google Gemini |
+| External APIs | OpenStreetMap (Overpass, Nominatim), Google Gemini |
 
 ---
 
@@ -135,7 +135,7 @@ Runs at `http://localhost:5173`
 **Medicines** (`/api/medicines`)
 | Method | Route | Auth | Description |
 |---|---|:---:|---|
-| GET | `/search` | optional | Search the OpenFDA drug database |
+| GET | `/search` | optional | Search the OTC medicine database |
 | POST | `/save` | 🔒 | Save a medicine to favorites |
 
 **Health** (`/api/health`)

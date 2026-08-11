@@ -115,7 +115,7 @@ export default function Dashboard() {
             <Pill className="w-6 h-6" />
           </div>
           <span className="text-xs font-bold text-slate-900">Find Medicine</span>
-          <span className="text-[10px] text-slate-500">FDA Database</span>
+          <span className="text-[10px] text-slate-500">Medicine Database</span>
         </Link>
 
         <Link

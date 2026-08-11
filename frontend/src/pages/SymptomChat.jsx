@@ -73,7 +73,7 @@ I am your AI healthcare information companion. Tell me what symptoms you are exp
 
 #### 🛡️ AI Safety Protocol:
 * I **never diagnose** diseases or prescribe prescription-only antibiotics.
-* I recommend common **FDA-documented OTC medicines** with dosage warnings.
+* I recommend common **OTC medicines** with dosage warnings.
 * For **emergency symptoms** (severe chest pain, shortness of breath), I direct you to the nearest emergency hospital.`,
               timestamp: new Date()
             }
@@ -265,7 +265,7 @@ I am your AI healthcare information companion. Tell me what symptoms you are exp
               <div className="w-8 h-8 rounded-xl bg-teal-700 text-white flex items-center justify-center">
                 <Bot className="w-4 h-4" />
               </div>
-              <span>MediAI is analyzing symptoms & checking OpenFDA drug labels...</span>
+              <span>MediAI is analyzing symptoms & checking medicine database...</span>
             </div>
           )}
 

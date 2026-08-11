@@ -49,14 +49,14 @@ export default function MedicineSearch() {
       <div className="med-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-800 text-xs font-bold border border-teal-200 mb-2">
-            <ShieldCheck className="w-4 h-4 text-teal-700" /> Official FDA Label Database Connector
+            <ShieldCheck className="w-4 h-4 text-teal-700" /> Over-The-Counter Medicine Database
           </div>
           <h1 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
             <Pill className="w-6 h-6 text-teal-700" />
             Authentic OTC Medicine Search
           </h1>
           <p className="text-xs text-slate-600 mt-1">
-            Search official US Food & Drug Administration (OpenFDA) drug label records & safety warnings
+            Search common drug label records, active ingredients & safety warnings
           </p>
         </div>
 
@@ -102,17 +102,17 @@ export default function MedicineSearch() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-slate-400 text-xs space-y-3">
           <RefreshCw className="w-8 h-8 animate-spin text-teal-700" />
-          <span>Fetching official OpenFDA drug labels...</span>
+          <span>Fetching medicine records...</span>
         </div>
       ) : medicines.length === 0 ? (
         <div className="med-card p-12 text-center text-slate-500 text-xs space-y-3">
           <AlertCircle className="w-10 h-10 text-slate-400 mx-auto" />
-          <p>No matching FDA medicine records found for "{query}". Try searching a common ingredient like "Paracetamol" or "Ibuprofen".</p>
+          <p>No matching medicine records found for "{query}". Try searching a common ingredient like "Paracetamol" or "Ibuprofen".</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {medicines.map((med, idx) => (
-            <MedicineCard key={med.fdaId || idx} medicine={med} />
+            <MedicineCard key={med.id || med.fdaId || idx} medicine={med} />
           ))}
         </div>
       )}

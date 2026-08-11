@@ -106,7 +106,7 @@ export default function Home() {
           </h1>
 
           <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Find nearby hospitals, trusted clinics, 24/7 pharmacies, authentic FDA medicine information, and structured health guidance.
+            Find nearby hospitals, trusted clinics, 24/7 pharmacies, OTC medicine information, and structured health guidance.
           </p>
 
           {/* Action Buttons */}

@@ -1,5 +1,5 @@
 const { analyzeSymptomsWithAI } = require('../services/geminiService');
-const { searchOpenFDA } = require('../services/openFdaService');
+const { searchMedicines } = require('../services/medicineService');
 const { fetchNearbyHospitalsFromOSM } = require('../services/overpassService');
 const Chat = require('../models/Chat');
 const SearchHistory = require('../models/SearchHistory');
@@ -19,11 +19,11 @@ const sendMessage = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Message is required' });
     }
 
-    // Step 1: Query OpenFDA for authentic OTC drug context matching user symptoms
-    const fdaMedicines = await searchOpenFDA(message);
+    // Step 1: Query local medicine service for OTC drug context matching user symptoms
+    const otcMedicines = await searchMedicines(message);
 
-    // Step 2: Pass symptoms + FDA drug data through Gemini AI Healthcare Guardrails Engine
-    const aiResult = await analyzeSymptomsWithAI(message, fdaMedicines);
+    // Step 2: Pass symptoms + OTC drug data through Gemini AI Healthcare Guardrails Engine
+    const aiResult = await analyzeSymptomsWithAI(message, otcMedicines);
 
     // Step 3: If emergency or severe, automatically fetch nearby hospital data
     let recommendedHospitals = [];

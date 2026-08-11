@@ -51,7 +51,7 @@ export default function MedicineCard({ medicine }) {
         {/* Badges */}
         <div className="flex flex-wrap gap-2 mb-3">
           <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> FDA OTC Verified
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> OTC Medicine
           </span>
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">
             <Store className="w-3 h-3 text-blue-600" /> Available at Nearby Pharmacy

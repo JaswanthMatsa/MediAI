@@ -21,7 +21,7 @@ function detectEmergency(message) {
   return EMERGENCY_KEYWORDS.some(kw => lower.includes(kw));
 }
 
-function generateFallbackResponse(userMessage, openFdaMedicines = []) {
+function generateFallbackResponse(userMessage, otcMedicines = []) {
   const lower = userMessage.toLowerCase();
   const isEmergency = detectEmergency(userMessage);
 
@@ -119,11 +119,11 @@ Severe or acute medical event requiring urgent evaluation.
     });
   }
 
-  // Add OpenFDA items if passed
-  if (openFdaMedicines && openFdaMedicines.length > 0) {
-    openFdaMedicines.slice(0, 2).forEach(med => {
+  // Add OTC catalog items if passed
+  if (otcMedicines && otcMedicines.length > 0) {
+    otcMedicines.slice(0, 2).forEach(med => {
       suggestedOTC.push({
-        name: `${med.brandName || med.name} (FDA OTC)`,
+        name: `${med.brandName || med.name}`,
         purpose: med.uses || 'Symptom relief',
         warnings: med.warnings || 'Follow packaging instructions.'
       });
@@ -167,15 +167,15 @@ ${urgencyBadge}`;
   };
 }
 
-async function analyzeSymptomsWithAI(userMessage, openFdaMedicines = []) {
+async function analyzeSymptomsWithAI(userMessage, otcMedicines = []) {
   const isEmergency = detectEmergency(userMessage);
   if (isEmergency) {
-    return generateFallbackResponse(userMessage, openFdaMedicines);
+    return generateFallbackResponse(userMessage, otcMedicines);
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-    return generateFallbackResponse(userMessage, openFdaMedicines);
+    return generateFallbackResponse(userMessage, otcMedicines);
   }
 
   try {
@@ -187,7 +187,7 @@ async function analyzeSymptomsWithAI(userMessage, openFdaMedicines = []) {
 
     const aiText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (aiText) {
-      const fallbackData = generateFallbackResponse(userMessage, openFdaMedicines);
+      const fallbackData = generateFallbackResponse(userMessage, otcMedicines);
       return {
         severity: fallbackData.severity,
         urgencyBadge: fallbackData.urgencyBadge,
@@ -201,7 +201,7 @@ async function analyzeSymptomsWithAI(userMessage, openFdaMedicines = []) {
     console.warn('[Gemini AI Call Error]', error.message);
   }
 
-  return generateFallbackResponse(userMessage, openFdaMedicines);
+  return generateFallbackResponse(userMessage, otcMedicines);
 }
 
 module.exports = { analyzeSymptomsWithAI, detectEmergency };

@@ -1,16 +1,16 @@
-const { searchOpenFDA, FALLBACK_MEDICINES } = require('../services/openFdaService');
+const { searchMedicines: fetchMedicines } = require('../services/medicineService');
 const User = require('../models/User');
 const SearchHistory = require('../models/SearchHistory');
 const { getIsConnected } = require('../config/db');
 
-// @desc Search Medicine Database (OpenFDA API)
+// @desc Search Medicine Database
 // @route GET /api/medicines/search
 const searchMedicines = async (req, res, next) => {
   try {
     const query = req.query.q || '';
     const userId = req.user ? req.user.id : null;
 
-    const medicines = await searchOpenFDA(query);
+    const medicines = await fetchMedicines(query);
 
     if (getIsConnected() && query) {
       await SearchHistory.create({
@@ -37,7 +37,7 @@ const searchMedicines = async (req, res, next) => {
 const getMedicinesBySymptom = async (req, res, next) => {
   try {
     const symptom = req.params.symptom || 'fever';
-    const medicines = await searchOpenFDA(symptom);
+    const medicines = await fetchMedicines(symptom);
 
     return res.json({
       success: true,
