@@ -11,7 +11,7 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **Mongo
 ## Core Features
 
 - 🤖 **AI-Powered Symptom Guidance**: Google Gemini-powered symptom analysis returning structured, non-diagnostic guidance (possible cause, OTC options, home care, when to see a doctor) with emergency keyword detection.
-- 💊 **Medicine Search & Information**: Search the built-in medicine catalog for brand names, active ingredients, dosage, and warnings.
+- 💊 **Medicine Search & Information**: Search medicines from a built-in medicine catalog and save frequently used medicines to your account.
 - 🗺️ **Nearby Healthcare Facility Discovery**: Real-time GIS facility finder using Leaflet & OpenStreetMap to locate nearby hospitals, clinics, and pharmacies with distance filtering and Google Maps navigation.
 - 🚨 **Emergency Assistance**: One-tap emergency contact dialing, red-flag symptom guide, and automated emergency facility surfacing.
 - 📊 **Health & BMI Tracking**: Daily medication reminders with dosage notes, hydration tracker with progress visualization, and evidence-based BMI calculations.
@@ -31,7 +31,7 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **Mongo
 
 ### Backend
 - **Runtime**: Node.js & Express.js
-- **Database**: MongoDB & Mongoose (with in-memory fallback)
+- **Database**: MongoDB & Mongoose
 - **Authentication**: JSON Web Tokens (JWT) & bcryptjs
 - **HTTP Client**: Axios
 
@@ -72,10 +72,10 @@ Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **Mongo
 
 ## Security
 
-- JWT authentication with an environment-enforced secret — the server fails to start if `JWT_SECRET` is not set, rather than falling back to a default.
-- Ownership checks on all user-scoped resources to prevent unauthorized access to another user's data.
-- Rate limiting on authentication endpoints to reduce brute-force risk.
-- HTTP security headers via Helmet; CORS restricted to configured client origin.
+- JWT-based authentication for protected routes
+- User ownership checks for user-specific data
+- Environment variables for sensitive configuration
+- Medical disclaimer to clarify that the application provides informational guidance only
 
 **Medical Disclaimer:** MediAI is an informational tool only. It does not provide medical diagnosis or prescribe controlled substances. In a medical emergency, call your local emergency number immediately.
 
