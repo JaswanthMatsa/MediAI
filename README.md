@@ -1,66 +1,81 @@
 # MediAI — Smart Healthcare & GIS Discovery Platform
 
-MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up OTC drug information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
+MediAI is a full-stack healthcare web application that helps users find nearby medical facilities, look up medicine information, track medication and hydration, and get AI-guided symptom analysis backed by clinical safety guardrails.
 
-Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, and **Google Gemini AI**.
+Medicine search uses a built-in medicine catalog, while AI symptom analysis uses Gemini with medicine information from the local catalog.
 
----
-
-## Key Features
-
-**Real-Time GIS Hospital & Clinic Finder**
-Interactive map (Leaflet + OpenStreetMap) showing nearby hospitals, clinics, and pharmacies, with Haversine-based distance filtering (3–20 km) and one-tap directions via Google Maps.
-
-**OTC Drug Search**
-Search common OTC medicine records for brand names, active ingredients, dosage, and warnings, with quick category filters and the ability to save favorite remedies.
-
-**AI Symptom Checker with Clinical Guardrails**
-Google Gemini-powered symptom analysis (with a rule-based fallback when no API key is configured) that returns structured, non-diagnostic guidance — possible cause, OTC options, home care, and when to see a doctor. Never prescribes controlled substances or definitive diagnoses. Automatically detects emergency keywords and surfaces the nearest trauma facilities.
-
-**Medication & Hydration Tracking**
-Custom daily medicine reminders with dosage notes, plus a hydration tracker with progress visualization.
-
-**BMI & Health Assessment**
-Calculates BMI, classifies weight category, and returns evidence-based wellness recommendations.
-
-**Emergency Hub**
-One-tap dialing for emergency services, ambulance, poison control, and mental health crisis lines, plus a red-flag symptom reference guide.
+Built with **React (Vite)**, **Tailwind CSS**, **Node.js**, **Express**, **MongoDB**, **OpenStreetMap (Overpass/Nominatim)**, and **Google Gemini AI**. Deployed seamlessly on **Vercel** (Frontend) and **Render** (Backend).
 
 ---
 
-## Architecture
+## Core Features
 
-```
-Frontend (React + Vite + Leaflet + Tailwind)
-                │  REST API
-                ▼
-Backend (Node.js + Express)
- ├── Auth (JWT + MongoDB, in-memory fallback for local dev)
- ├── Hospital Service (Nominatim + Overpass QL)
- ├── Medicine Service (Built-in OTC medicine catalog)
- └── AI Service (Gemini, with rule-based fallback)
-```
+- 🤖 **AI-Powered Symptom Guidance**: Google Gemini-powered symptom analysis returning structured, non-diagnostic guidance (possible cause, OTC options, home care, when to see a doctor) with emergency keyword detection.
+- 💊 **Medicine Search & Information**: Search the built-in medicine catalog for brand names, active ingredients, dosage, and warnings.
+- 🗺️ **Nearby Healthcare Facility Discovery**: Real-time GIS facility finder using Leaflet & OpenStreetMap to locate nearby hospitals, clinics, and pharmacies with distance filtering and Google Maps navigation.
+- 🚨 **Emergency Assistance**: One-tap emergency contact dialing, red-flag symptom guide, and automated emergency facility surfacing.
+- 📊 **Health & BMI Tracking**: Daily medication reminders with dosage notes, hydration tracker with progress visualization, and evidence-based BMI calculations.
+- 🔐 **User Authentication**: Secure JWT-based registration and login with MongoDB data persistence.
+- 📱 **Responsive Healthcare Dashboard**: Clean, accessible UI tailored for desktop and mobile devices.
 
 ---
 
 ## Technology Stack
 
-| Layer | Technologies |
-|---|---|
-| Frontend | React 18, Vite, Tailwind CSS, React Router v7, Leaflet |
-| Backend | Node.js, Express, JWT, Axios, Mongoose |
-| Database | MongoDB Atlas (in-memory fallback for local runs without a DB) |
-| External APIs | OpenStreetMap (Overpass, Nominatim), Google Gemini |
+### Frontend
+- **Framework**: React 18 (Vite)
+- **Styling**: Tailwind CSS
+- **Routing**: React Router v7
+- **Mapping**: Leaflet / React-Leaflet
+- **Deployment**: Vercel
+
+### Backend
+- **Runtime**: Node.js & Express.js
+- **Database**: MongoDB & Mongoose (with in-memory fallback)
+- **Authentication**: JSON Web Tokens (JWT) & bcryptjs
+- **HTTP Client**: Axios
+
+### External APIs & Integrations
+- **AI Engine**: Google Gemini API
+- **Maps & GIS**: OpenStreetMap (Overpass QL & Nominatim)
+
+---
+
+## Architecture
+
+```text
+                    MediAI
+                       │
+          ┌────────────┴────────────┐
+          │                         │
+     React Frontend            Express Backend
+          │                         │
+          │                  ┌──────┴──────┐
+          │                  │             │
+          │               MongoDB      Gemini AI
+          │
+          ├── Medicine Search
+          │        ↓
+          │   Local Medicine
+          │     Catalog
+          │
+          ├── Symptom Chat
+          │        ↓
+          │     Gemini (using Local Catalog)
+          │
+          └── Maps/Healthcare
+                   ↓
+              OpenStreetMap
+```
 
 ---
 
 ## Security
 
-- JWT authentication with an environment-enforced secret — the server fails to start if `JWT_SECRET` is not set, rather than falling back to a default
-- Ownership checks on all user-scoped resources to prevent unauthorized access to another user's data
-- Rate limiting on authentication endpoints to reduce brute-force risk
-- HTTP security headers via Helmet; CORS restricted to a configured client origin
-- Fallback location data is explicitly flagged as unverified sample data and never presented as a real facility's contact information
+- JWT authentication with an environment-enforced secret — the server fails to start if `JWT_SECRET` is not set, rather than falling back to a default.
+- Ownership checks on all user-scoped resources to prevent unauthorized access to another user's data.
+- Rate limiting on authentication endpoints to reduce brute-force risk.
+- HTTP security headers via Helmet; CORS restricted to configured client origin.
 
 **Medical Disclaimer:** MediAI is an informational tool only. It does not provide medical diagnosis or prescribe controlled substances. In a medical emergency, call your local emergency number immediately.
 
@@ -75,7 +90,7 @@ git clone https://github.com/JaswanthMatsa/MediAI.git
 cd MediAI
 ```
 
-**Backend**
+### Backend
 ```bash
 cd backend
 npm install
@@ -93,17 +108,13 @@ CLIENT_URL=http://localhost:5173
 ```bash
 npm start
 ```
-*(or `npm run dev` for auto-restart on file changes — requires Node 18.11+)*
 
-Runs at `http://localhost:5001`
-
-**Frontend**
+### Frontend
 ```bash
 cd ../frontend
 npm install
 npm run dev
 ```
-Runs at `http://localhost:5173`
 
 ---
 
@@ -135,7 +146,7 @@ Runs at `http://localhost:5173`
 **Medicines** (`/api/medicines`)
 | Method | Route | Auth | Description |
 |---|---|:---:|---|
-| GET | `/search` | optional | Search the OTC medicine database |
+| GET | `/search` | optional | Search the medicine database |
 | POST | `/save` | 🔒 | Save a medicine to favorites |
 
 **Health** (`/api/health`)
